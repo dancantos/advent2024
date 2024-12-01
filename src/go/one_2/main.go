@@ -6,7 +6,6 @@ import (
 	_ "embed"
 	"fmt"
 	"math/rand"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -17,9 +16,9 @@ var (
 )
 
 func randArr() []int {
-	arr := make([]int, 1e4)
+	arr := make([]int, 10)
 	for i := 0; i < len(arr); i++ {
-		arr[i] = rand.Intn(1e4)
+		arr[i] = rand.Intn(10)
 	}
 	return arr
 }
@@ -30,35 +29,18 @@ func main() {
 		panic(err)
 	}
 	// fmt.Println(a1, a2)
-	// fmt.Println(sumdiffsnaive(a1, a2))
-	fmt.Println(sumdiffsdoesthiswork(a1, a2))
+	fmt.Println(similarityScore(a1, a2))
 }
 
-func sumdiffsnaive(a1, a2 []int) int {
-	slices.Sort(a1)
-	slices.Sort(a2)
-
-	sum := 0
+func similarityScore(a1, a2 []int) int {
+	a2Counts := make(map[int]int)
 	for i := 0; i < len(a1); i++ {
-		if a1[i] < a2[i] {
-			sum += a2[i] - a1[i]
-			continue
-		}
-		sum += a1[i] - a2[i]
+		a2Counts[a2[i]]++
 	}
-	return sum
-}
-
-// This algorithm is the same as the naive algorithm but ignores the sort
-// This is based on the observation that altering any 2 elements in either list by the same amount does not affect the resulting sum of diffs.
-func sumdiffsdoesthiswork(a1, a2 []int) int {
+	// fmt.Println(a2Counts)
 	sum := 0
-	for i := 0; i < len(a1); i++ {
-		if a1[i] < a2[i] {
-			sum += a2[i] - a1[i]
-			continue
-		}
-		sum += a1[i] - a2[i]
+	for _, n := range a1 {
+		sum += n * a2Counts[n]
 	}
 	return sum
 }
