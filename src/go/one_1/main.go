@@ -3,23 +3,37 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"crypto/rand"
 	_ "embed"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"slices"
 	"strconv"
 	"strings"
 )
 
+// 1 2
+// 4 3
+
+// 1 + 1 = 2
+
+// 4 2
+// 1 3
+
+// 2 + 2 = 4
+
 var (
-	a1 = randArr()
-	a2 = randArr()
+	size int = 5
+	a1       = randArr()
+	a2       = randArr()
+	max      = big.NewInt(10)
 )
 
 func randArr() []int {
-	arr := make([]int, 1e4)
+	arr := make([]int, size)
 	for i := 0; i < len(arr); i++ {
-		arr[i] = rand.Intn(1e4)
+		n, _ := rand.Int(rand.Reader, max)
+		arr[i] = int(n.Int64())
 	}
 	return arr
 }
@@ -29,29 +43,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// fmt.Println(a1, a2)
-	// fmt.Println(sumdiffsnaive(a1, a2))
-	fmt.Println(sumdiffsdoesthiswork(a1, a2))
+	fmt.Println(sumdiffs(a1, a2))
 }
 
-func sumdiffsnaive(a1, a2 []int) int {
+func sumdiffs(a1, a2 []int) int {
+	// a1 = slices.Clone(a1)
+	// a2 = slices.Clone(a2)
 	slices.Sort(a1)
 	slices.Sort(a2)
 
-	sum := 0
-	for i := 0; i < len(a1); i++ {
-		if a1[i] < a2[i] {
-			sum += a2[i] - a1[i]
-			continue
-		}
-		sum += a1[i] - a2[i]
-	}
-	return sum
-}
-
-// This algorithm is the same as the naive algorithm but ignores the sort
-// This is based on the observation that altering any 2 elements in either list by the same amount does not affect the resulting sum of diffs.
-func sumdiffsdoesthiswork(a1, a2 []int) int {
 	sum := 0
 	for i := 0; i < len(a1); i++ {
 		if a1[i] < a2[i] {
