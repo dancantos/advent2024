@@ -12,7 +12,7 @@ func Count[V any](in iter.Seq[V]) int {
 
 func Filter[V any](in iter.Seq[V], predicate func(V) bool) iter.Seq[V] {
 	return func(yield func(V) bool) {
-		in(func(v V) bool { return predicate(v) && yield(v) })
+		in(func(v V) bool { return !predicate(v) || yield(v) })
 	}
 }
 
