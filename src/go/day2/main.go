@@ -2,6 +2,9 @@ package main
 
 import (
 	_ "embed"
+	"slices"
+
+	"github.com/dancantos/advent2025/src/go/pkg/it"
 )
 
 func main() {
@@ -15,11 +18,5 @@ const (
 )
 
 func countSafe(input [][]int, safeFn func([]int) bool) int {
-	count := 0
-	for _, nums := range input {
-		if safeFn(nums) {
-			count++
-		}
-	}
-	return count
+	return it.Count(it.Filter(slices.Values(input), safeFn))
 }
