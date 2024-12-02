@@ -5,48 +5,20 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
-	"math/rand"
 	"strconv"
 	"strings"
 )
 
-var (
-	a1 = randArr()
-	a2 = randArr()
-)
+//go:embed input.txt
+var data []byte
 
-func randArr() []int {
-	arr := make([]int, 10)
-	for i := 0; i < len(arr); i++ {
-		arr[i] = rand.Intn(10)
-	}
-	return arr
-}
-
-func main() {
+var A1, A2 = func() ([]int, []int) {
 	a1, a2, err := readInput(data)
 	if err != nil {
 		panic(err)
 	}
-	// fmt.Println(a1, a2)
-	fmt.Println(similarityScore(a1, a2))
-}
-
-func similarityScore(a1, a2 []int) int {
-	a2Counts := make(map[int]int)
-	for i := 0; i < len(a1); i++ {
-		a2Counts[a2[i]]++
-	}
-	// fmt.Println(a2Counts)
-	sum := 0
-	for _, n := range a1 {
-		sum += n * a2Counts[n]
-	}
-	return sum
-}
-
-//go:embed input.txt
-var data []byte
+	return a1, a2
+}()
 
 func readInput(data []byte) ([]int, []int, error) {
 	a1 := make([]int, 0)
