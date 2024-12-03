@@ -9,6 +9,7 @@ import (
 	"github.com/dancantos/advent2024/src/go/pkg/it"
 )
 
+// Run yields to a for loop N times and prints time stats when completed.
 func Run(count int) func(func() bool) {
 	return func(yield func() bool) {
 		deltas := make([]time.Duration, count)
@@ -29,10 +30,6 @@ func stats(deltas []time.Duration) {
 	max := it.Reduce(slices.Values(deltas), 0, greater)
 	sum := it.Reduce(slices.Values(deltas), 0, sum)
 	mean := sum / time.Duration(len(deltas))
-
-	// precision := int(math.Min(3*math.Floor(math.Log(min)/math.Log(10)/3), 9))
-	// unit := []string{"ns", "µs", "ms", "s"}[precision/3]
-	// div := math.Pow(10, float64(precision))
 
 	fmt.Println("=== Performance Stats ===")
 	fmt.Printf(" min:  %s\n", min)
@@ -57,16 +54,3 @@ func greater(a, b time.Duration) time.Duration {
 func sum(a, b time.Duration) time.Duration {
 	return a + b
 }
-
-// def run(n: int) -> iter:
-//     times = [perf_counter_ns()]
-//     for i in range(n):
-//         yield i
-//         times.append(perf_counter_ns())
-//     deltas = [b - a for a, b in zip(times[:-1], times[1:])]
-//     precision = min(3 * math.floor(math.log(min(deltas)) / math.log(10) / 3), 9)
-//     unit = ["ns", "μs", "ms", "s"][precision//3]
-//     print("=== Performance Stats ===")
-//     print(f" min:  {min(deltas)/10**precision:-10.3f}{unit}")
-//     print(f" max:  {max(deltas)/10**precision:-10.3f}{unit}")
-//     print(f" mean: {sum(deltas) / len(deltas)/10**precision:-10.3f}{unit}")
