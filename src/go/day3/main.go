@@ -8,16 +8,15 @@ import (
 )
 
 func main() {
-	var result1 int
-	d1 := timeit.Run(func() {
-		result1 = mulall(input)
-	})
+	fmt.Printf("Puzzle1 (mulall): %d\n", mulall(input))
+	for range timeit.Run(100) {
+		mulall(input)
+	}
 
-	var result2 int
-	d2 := timeit.Run(func() {
-		result2 = mulWithInstruction(input)
-	})
+	fmt.Println()
 
-	fmt.Printf("Puzzle1 (mulall): %d (in %s)\n", result1, d1)
-	fmt.Printf("Puzzle2 (mulWithInstruction): %d (in %s)\n", result2, d2)
+	fmt.Printf("Puzzle2 (mulWithInstruction): %d\n", mulWithInstruction(input))
+	for range timeit.Run(100) {
+		mulWithInstruction(input)
+	}
 }

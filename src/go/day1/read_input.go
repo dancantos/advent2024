@@ -12,7 +12,7 @@ import (
 //go:embed input.txt
 var data []byte
 
-var A1, A2 = func() ([]int, []int) {
+var a1, a2 = func() ([]int, []int) {
 	a1, a2, err := readInput(data)
 	if err != nil {
 		panic(err)

@@ -6,10 +6,6 @@ import (
 )
 
 func puzzle1() {
-	a1, a2, err := readInput(data)
-	if err != nil {
-		panic(err)
-	}
 	fmt.Println(sumdiffs(a1, a2))
 }
 

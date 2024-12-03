@@ -10,18 +10,17 @@ import (
 )
 
 func main() {
-	var result1 int
-	d1 := timeit.Run(func() {
-		result1 = countSafe(Input, isSafe1)
-	})
+	fmt.Printf("Puzzle1 (isSafe): %d\n", countSafe(Input, isSafe1))
+	for range timeit.Run(100) {
+		countSafe(Input, isSafe1)
+	}
 
-	var result2 int
-	d2 := timeit.Run(func() {
-		result2 = countSafe(Input, isSafe2)
-	})
+	fmt.Println()
 
-	fmt.Printf("Puzzle1: %d (in %s)\n", result1, d1)
-	fmt.Printf("Puzzle2: %d (in %s)\n", result2, d2)
+	fmt.Printf("Puzzle2 (isSafeDampened): %d\n", countSafe(Input, isSafe2))
+	for range timeit.Run(100) {
+		countSafe(Input, isSafe2)
+	}
 }
 
 const (
