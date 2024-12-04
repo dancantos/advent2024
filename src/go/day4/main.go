@@ -12,19 +12,19 @@ import (
 
 //go:embed input.txt
 var data []byte
+var input = readInput(bytes.NewReader(data))
 
 func main() {
-	arr := readInput(bytes.NewReader(data))
-	fmt.Printf("Puzzle 1 (Count \"XMAS\"): %d\n", countXmas(arr))
+	fmt.Printf("Puzzle 1 (Count \"XMAS\"): %d\n", countXmas(input))
 	for range timeit.Run(1) {
-		countXmas(arr)
+		countXmas(input)
 	}
 
 	fmt.Println()
 
-	fmt.Printf("Puzzle 2 (Count \"MAS\"): %d\n", countMas(arr))
+	fmt.Printf("Puzzle 2 (Count \"MAS\"): %d\n", countMas(input))
 	for range timeit.Run(1) {
-		countMas(arr)
+		countMas(input)
 	}
 }
 
