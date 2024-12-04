@@ -18,12 +18,11 @@ func countMas(arr [][]rune) int {
 }
 
 func detectMas(arr [][]rune, i, j int) int {
-	count := 0
 	if ((arr[i-1][j-1] == 'M' && arr[i+1][j+1] == 'S') || (arr[i-1][j-1] == 'S' && arr[i+1][j+1] == 'M')) &&
 		((arr[i-1][j+1] == 'M' && arr[i+1][j-1] == 'S') || (arr[i-1][j+1] == 'S' && arr[i+1][j-1] == 'M')) {
-		count++
+		return 1
 	}
-	return count
+	return 0
 }
 
 var possible = []string{"MMSS", "MSMS", "SMSM", "SSMM"}
