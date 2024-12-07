@@ -1,6 +1,7 @@
 use std::time::Instant;
 
 mod puzzle1;
+mod puzzle2;
 mod input;
 
 fn main() {
@@ -8,6 +9,12 @@ fn main() {
 
     let now = Instant::now();
     let solution = puzzle1::sum_solveable(&equations);
+    let elapsed = now.elapsed();
+    println!("{}", solution);
+    println!("elapsed: {:.2?}", elapsed);
+
+    let now = Instant::now();
+    let solution = puzzle2::sum_solveable(&equations);
     let elapsed = now.elapsed();
     println!("{}", solution);
     println!("elapsed: {:.2?}", elapsed);
