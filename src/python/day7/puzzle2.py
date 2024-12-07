@@ -1,26 +1,29 @@
 from .equation import equation
 from math import log10, ceil, pow
 
-def isSolveableWithConcat(eq):
-    if eq.target < 0:
+def isSolveableWithConcat(target, terms):
+    return _isSolveableWithConcat(target, terms, len(terms)-1)
+
+def _isSolveableWithConcat(target, terms, head):
+    if target < 0:
         return False
 
-    if len(eq.terms) == 1:
-        return eq.target == eq.terms[-1]
+    if head == 0:
+        return target == terms[head]
 
-    last = eq.terms[-1]
+    last = terms[head]
 
     # try division
-    if eq.target % last == 0 and isSolveableWithConcat(equation(eq.target//last, eq.terms[:-1])):
+    if target % last == 0 and _isSolveableWithConcat(target//last, terms, head-1):
         return True
 
     # try deconcatenating
-    unconcatenated = unconcat(eq.target, last)
-    if unconcatenated < eq.target and isSolveableWithConcat(equation(unconcatenated, eq.terms[:-1])):
+    unconcatenated = unconcat(target, last)
+    if unconcatenated < target and _isSolveableWithConcat(unconcatenated, terms, head-1):
         return True
 
     # try subtraction
-    return isSolveableWithConcat(equation(eq.target-last, eq.terms[:-1]))
+    return _isSolveableWithConcat(target-last, terms, head-1)
 
 def unconcat(a, b):
     if a == b:
@@ -33,7 +36,7 @@ def unconcat(a, b):
     return a
 
 if __name__ == "__main__":
-    print(isSolveableWithConcat(equation(10, [1, 9])))
-    print(isSolveableWithConcat(equation(10, [1, 8])))
-    print(isSolveableWithConcat(equation(10, [1, 10])))
-    print(isSolveableWithConcat(equation(10, [3, 3, 1])))
+    print(isSolveableWithConcat(10, [1, 9]))
+    print(isSolveableWithConcat(10, [1, 8]))
+    print(isSolveableWithConcat(10, [1, 10]))
+    print(isSolveableWithConcat(10, [3, 3, 1]))

@@ -6,14 +6,14 @@ import modules.timer as timer
 
 
 def main():
-    # min:6.993ms     max:31.727ms     mean:7.772ms
+    # min:2.892ms     max:3.239ms     mean:3.055ms
     print(f"Puzzle 1 (solveable with +*): {countSolveable(input, isSolveable)}")
     for _ in timer.run(100):
         countSolveable(input, isSolveable)
 
     print()
 
-    # min:11.098ms     max:12.658ms     mean:11.471ms
+    # min:5.937ms     max:6.683ms     mean:6.195ms
     print(f"Puzzle 1 (solveable with +*||): {countSolveable(input, isSolveableWithConcat)}")
     for _ in timer.run(100):
         countSolveable(input, isSolveableWithConcat)
@@ -21,7 +21,7 @@ def main():
 def countSolveable(equations, filter):
     count = 0
     for eq in equations:
-        if filter(eq):
+        if filter(eq.target, eq.terms):
             count += eq.target
     return count
 
