@@ -17,11 +17,7 @@ func isSolveableWithConcat(eq equation) bool {
 		return true
 	}
 
-	// check unconcat
-	// x1, x2 := unconcat(eq.target, last), _unconcat(eq.target, last)
-	// if x1 != x2 {
-	// 	panic(fmt.Errorf("unconcat(%d, %d) = %d, expected %d", eq.target, last, x1, x2))
-	// }
+	// de-concatenate
 	if unconcat := unconcat(eq.target, last); unconcat < eq.target && isSolveableWithConcat(equation{unconcat, eq.terms[:len(eq.terms)-1]}) {
 		return true
 	}
