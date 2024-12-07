@@ -50,7 +50,7 @@ func main() {
 
 	fmt.Println()
 
-	fmt.Printf("puzzle 2: solveable targets (+*||): %d\n", countSolveableTargets(equations, isSolveable))
+	fmt.Printf("puzzle 2: solveable targets (+*||): %d\n", countSolveableTargets(equations, isSolveableWithConcat))
 	for range timeit.Run(1) {
 		countSolveableTargets(equations, isSolveableWithConcat)
 	}
