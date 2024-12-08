@@ -1,10 +1,12 @@
 package grid
 
+// Bitmask represents a grid of numbers where each cell can be set to true or false.
 type Bitmask struct {
 	width, height int
 	mask          []uint64
 }
 
+// NewBitmask creates a bitmask representing a grid of numbers.
 func NewBitmask(width, height int) Bitmask {
 	return Bitmask{
 		width:  width,
@@ -13,27 +15,38 @@ func NewBitmask(width, height int) Bitmask {
 	}
 }
 
+// IsSet returns true if a bit is set.
 func (b Bitmask) IsSet(x, y int) bool {
 	mapped := y*b.width + x
 	row, col := mapped/64, uint64(1)<<(mapped%64)
 	return b.mask[row]&col > 0
 }
 
-func (b Bitmask) Set(x, y int) {
+// Set sets a grid bit, returning true if the bit was flipped to true.
+func (b Bitmask) Set(x, y int) bool {
 	row, col := b.rowcol(x, y)
+	wasFalse := b.mask[row]&col == 0
 	b.mask[row] |= col
+	return wasFalse
 }
 
-func (b Bitmask) Flip(x, y int) {
+// Flip flips a grid bit, returning true if the bit was flipped to true.
+func (b Bitmask) Flip(x, y int) bool {
 	row, col := b.rowcol(x, y)
+	wasFalse := b.mask[row]&col == 0
 	b.mask[row] ^= col
+	return wasFalse
 }
 
-func (b Bitmask) Unset(x, y int) {
+// Unset unsets a grid bit, returning true if the bit was flipped to false.
+func (b Bitmask) Unset(x, y int) bool {
 	row, col := b.rowcol(x, y)
+	wasEmpty := b.mask[row]&col == 0
 	b.mask[row] &= ^col
+	return !wasEmpty
 }
 
+// CountSet counts the number of set bits in the mask
 func (b Bitmask) CountSet() int {
 	count := 0
 	for _, mask := range b.mask {

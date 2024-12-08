@@ -54,9 +54,8 @@ func countAntinodes(g grid2, size vec, antinodes func(n1, n2, size vec) iter.Seq
 	for _, nodes := range g {
 		for n1, n2 := range it.SlicePairs(nodes) {
 			for a := range antinodes(n1, n2, size) {
-				if !visited.IsSet(a.x, a.y) {
+				if visited.Set(a.x, a.y) {
 					count++
-					visited.Set(a.x, a.y)
 				}
 			}
 		}
