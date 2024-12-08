@@ -29,3 +29,15 @@ func Reduce[V, R any](in iter.Seq[V], init R, reducer func(R, V) R) R {
 	}
 	return result
 }
+
+func SlicePairs[T any](slice []T) iter.Seq2[T, T] {
+	return func(yield func(T, T) bool) {
+		for i := 0; i < len(slice); i++ {
+			for j := i + 1; j < len(slice); j++ {
+				if !yield(slice[i], slice[j]) {
+					return
+				}
+			}
+		}
+	}
+}
