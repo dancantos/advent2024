@@ -8,6 +8,8 @@ import (
 	"io"
 	"iter"
 
+	"github.com/dancantos/advent2024/src/go/pkg/grid"
+	"github.com/dancantos/advent2024/src/go/pkg/it"
 	"github.com/dancantos/advent2024/src/go/pkg/timeit"
 )
 
@@ -15,10 +17,10 @@ import (
 var input []byte
 var inputGrid, size = readInput(bytes.NewReader(input))
 
-func readInput(r io.Reader) (grid, vec) {
+func readInput(r io.Reader) (grid2, vec) {
 	s := bufio.NewScanner(r)
 	s.Split(bufio.ScanLines)
-	result := make(grid)
+	result := make(grid2)
 	y := 0
 	var width int
 	for s.Scan() {
@@ -46,15 +48,15 @@ func main() {
 	}
 }
 
-func countAntinodes(g grid, size vec, producer func(n1, n2, size vec) iter.Seq[vec]) int {
-	visited := map[vec]struct{}{}
+func countAntinodes(g grid2, size vec, antinodes func(n1, n2, size vec) iter.Seq[vec]) int {
+	visited := grid.NewBitmask(size.x, size.y)
 	count := 0
 	for _, nodes := range g {
-		for n1, n2 := range iteratePairs(nodes) {
-			for a := range producer(n1, n2, size) {
-				if _, hasVisited := visited[a]; !hasVisited {
+		for n1, n2 := range it.SlicePairs(nodes) {
+			for a := range antinodes(n1, n2, size) {
+				if !visited.IsSet(a.x, a.y) {
 					count++
-					visited[a] = struct{}{}
+					visited.Set(a.x, a.y)
 				}
 			}
 		}
@@ -126,6 +128,6 @@ func inside(p, size vec) bool {
 }
 
 type (
-	grid map[rune][]vec
-	vec  struct{ x, y int }
+	grid2 map[rune][]vec
+	vec   struct{ x, y int }
 )
