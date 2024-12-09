@@ -1,46 +1,46 @@
 #[derive(Debug)]
-struct Bitmask {
+pub struct Bitmask {
     width: u64,
     height: u64,
     mask: Vec<u64>,
 }
 
 impl Bitmask {
-    fn new(width: u64, height: u64) -> Bitmask {
-        let rows: usize = (width*height / 64).try_into().unwrap();
+    pub fn new(width: u64, height: u64) -> Bitmask {
+        let rows: usize = ((width*height / 64)+1).try_into().unwrap();
         let mask = vec![0;rows];
         Bitmask { width: width, height: height, mask: mask }
     }
 
-    fn set(&mut self, x: u64, y: u64) {
+    pub fn set(&mut self, x: u64, y: u64) {
         let entry: usize = (y*self.width + x).try_into().unwrap();
         let row: usize = entry / 64;
         let col = entry % 64;
         self.mask[row] |= 1<<col;
     }
 
-    fn unset(&mut self, x: u64, y: u64) {
+    pub fn unset(&mut self, x: u64, y: u64) {
         let entry: usize = (y*self.width + x).try_into().unwrap();
         let row: usize = entry / 64;
         let col = entry % 64;
         self.mask[row] &= !(1<<col);
     }
 
-    fn flip(&mut self, x: u64, y: u64) {
+    pub fn flip(&mut self, x: u64, y: u64) {
         let entry: usize = (y*self.width + x).try_into().unwrap();
         let row: usize = entry / 64;
         let col = entry % 64;
         self.mask[row] ^= 1<<col;
     }
 
-    fn is_set(&self, x: u64, y: u64) -> bool {
+    pub fn is_set(&self, x: u64, y: u64) -> bool {
         let entry: usize = (y*self.width + x).try_into().unwrap();
         let row: usize = entry / 64;
         let col = entry % 64;
         return (self.mask[row] & 1<<col) > 0;
     }
 
-    fn inside(&self, x: u64, y: u64) -> bool {
+    pub fn inside(&self, x: u64, y: u64) -> bool {
         x < self.width && y < self.height
     }
 }
