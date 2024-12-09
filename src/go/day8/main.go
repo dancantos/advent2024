@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	_ "embed"
 	"fmt"
@@ -9,31 +8,23 @@ import (
 	"iter"
 
 	"github.com/dancantos/advent2024/src/go/pkg/grid"
+	"github.com/dancantos/advent2024/src/go/pkg/input"
 	"github.com/dancantos/advent2024/src/go/pkg/it"
 	"github.com/dancantos/advent2024/src/go/pkg/timeit"
 )
 
 //go:embed input.txt
-var input []byte
-var inputGrid, size = readInput(bytes.NewReader(input))
+var data []byte
+var inputGrid, size = readInput(bytes.NewReader(data))
 
 func readInput(r io.Reader) (grid2, vec) {
-	s := bufio.NewScanner(r)
-	s.Split(bufio.ScanLines)
 	result := make(grid2)
-	y := 0
-	var width int
-	for s.Scan() {
-		width = len(s.Text())
-		for x, char := range s.Text() {
-			if char == '.' {
-				continue
-			}
+	width, height := input.ReadGrid(r, func(x, y int, char rune) {
+		if char != '.' {
 			result[char] = append(result[char], vec{x, y})
 		}
-		y++
-	}
-	return result, vec{y, width}
+	})
+	return result, vec{width, height}
 }
 
 func main() {

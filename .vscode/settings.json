@@ -3,6 +3,7 @@
         "src/rust/day1/Cargo.toml",
         "src/rust/day7/Cargo.toml",
         "src/rust/day8/Cargo.toml",
-        "src/rust/crates/grid/Cargo.toml"
+        "src/rust/crates/grid/Cargo.toml",
+        "src/rust/crates/itertools/Cargo.toml"
     ]
 }
