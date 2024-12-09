@@ -3,17 +3,18 @@ package main
 import (
 	_ "embed"
 	"fmt"
+
+	"github.com/dancantos/advent2024/src/go/pkg/timeit"
 )
 
 //go:embed input.txt
 var input string
 
 func main() {
-	p := process(input)
-	// fmt.Println(p)
-	l := left2(p)
-	// fmt.Println(l)
-	fmt.Println(checksum(l))
+	fmt.Printf("Puzzle 1 (fragmented checksum): %d\n", inplaceChecksum1([]byte(input)))
+	for range timeit.Run(1) {
+		inplaceChecksum1([]byte(input))
+	}
 }
 
 func process(input string) []int {
@@ -35,24 +36,6 @@ func process(input string) []int {
 		active = !active
 	}
 	return result
-}
-
-func left(arr []int) []int {
-	head := 0
-	tail := len(arr) - 1
-
-	for head < tail {
-		head = seekEmpty(arr, head)
-		tail = seekFull(arr, tail)
-		if head > tail {
-			break
-		}
-		arr = swap(arr, head, tail)
-		head++
-		tail--
-		// fmt.Println(head, tail, arr)
-	}
-	return arr
 }
 
 func left2(arr []int) []int {
@@ -115,29 +98,6 @@ func isEmpty(slice []int) bool {
 	return true
 }
 
-func seekEmpty(arr []int, head int) int {
-	for i := head; i < len(arr); i++ {
-		if arr[i] == -1 {
-			return i
-		}
-	}
-	return -1
-}
-
-func seekFull(arr []int, head int) int {
-	for i := head; i >= 0; i-- {
-		if arr[i] != -1 {
-			return i
-		}
-	}
-	return -1
-}
-
-func swap(arr []int, a, b int) []int {
-	arr[a], arr[b] = arr[b], arr[a]
-	return arr
-}
-
 func swap2(arr []int, loc int, tail int, blockSize int) []int {
 	// fmt.Println(arr[loc:loc+blockSize], arr[tail-blockSize+1:tail+1], loc, tail)
 	copy(arr[loc:loc+blockSize], arr[tail-blockSize+1:tail+1])
@@ -154,6 +114,15 @@ func checksum(arr []int) int {
 			continue
 		}
 		sum += i * num
+	}
+	return sum
+}
+
+func checksumP(s string) int {
+	sum := 0
+	for i, char := range s {
+		sum += i * int(char-'0')
+		fmt.Println(sum)
 	}
 	return sum
 }
