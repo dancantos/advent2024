@@ -42,11 +42,9 @@ func main() {
 func puzzle1(g grid, starts []vec) int {
 	searcher := &graphSearcher{}
 	count := 0
-	for _, s := range starts {
-		for node := range searcher.walk([]vec{s}, g, accept1) {
-			if g.get(node) == 9 {
-				count++
-			}
+	for node := range searcher.walk(starts, g, accept1) {
+		if g.get(node) == 9 {
+			count++
 		}
 	}
 	return count
@@ -86,9 +84,9 @@ func (g *graphSearcher) walk(starts []vec, gr grid, accept func(grid, vec, vec) 
 	return func(yield func(vec) bool) {
 		for len(g.queue) > 0 {
 			node := g.pop()
-			if _, v := g.visited[node]; v {
-				continue
-			}
+			// if _, v := g.visited[node]; v {
+			// 	continue
+			// }
 			if !yield(node) {
 				return
 			}
