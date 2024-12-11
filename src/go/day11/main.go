@@ -15,11 +15,11 @@ import (
 var input string
 var arr = readInput(input)
 
-func readInput(s string) []uint64 {
+func readInput(s string) []int {
 	split := strings.Split(input, " ")
-	result := make([]uint64, len(split))
+	result := make([]int, len(split))
 	for i, n := range strings.Split(input, " ") {
-		result[i] = uint64(must.Return(strconv.Atoi(n)))
+		result[i] = int(must.Return(strconv.Atoi(n)))
 	}
 	return result
 }
@@ -35,21 +35,21 @@ func main() {
 	}
 }
 
-func fullCount(arr []uint64, iterations int) int {
+func fullCount(arr []int, iterations int) int {
 	count := 0
-	m := make(memory)
+	m := newMemory(iterations)
 	for _, n := range arr {
 		count += countStones(n, iterations, m)
 	}
 	return count
 }
 
-func countStones(n uint64, depth int, m memory) int {
-	if result, exists := m.get(n, depth); exists {
-		return result
-	}
+func countStones(n int, depth int, m memory) int {
 	if depth == 0 {
 		return 1
+	}
+	if result, exists := m.get(n, depth); exists {
+		return result
 	}
 	result := 0
 	switch {
@@ -65,35 +65,45 @@ func countStones(n uint64, depth int, m memory) int {
 	return result
 }
 
-func evenDigits(n uint64) bool {
+func evenDigits(n int) bool {
 	for n >= 100 {
 		n /= 100
 	}
 	return n >= 10
 }
 
-func splitIntByMath(n uint64) (left, right uint64) {
-	digits := uint64(math.Ceil(math.Log10(float64(n) + 0.1)))
-	exp := uint64(math.Pow10(int(digits) / 2))
+func splitIntByMath(n int) (left, right int) {
+	digits := int(math.Ceil(math.Log10(float64(n) + 0.1)))
+	exp := int(math.Pow10(int(digits) / 2))
 	return n / exp, n % exp
 }
 
-type memory map[uint64]map[int]int
-
-func (m memory) record(n uint64, depth, result int) {
-	r, exists := m[n]
-	if !exists {
-		r = make(map[int]int)
-		m[n] = r
-	}
-	// fmt.Println(r, depth)
-	r[depth] = result
+type memory struct {
+	maxDepth int
+	m        map[int][]int
 }
 
-func (m memory) get(n uint64, depth int) (int, bool) {
-	if r, exists := m[n]; exists {
-		result, exists := r[depth]
-		return result, exists
+func newMemory(maxDepth int) memory {
+	return memory{
+		maxDepth: maxDepth,
+		m:        make(map[int][]int),
+	}
+}
+
+func (m memory) record(n int, depth, result int) {
+	r, exists := m.m[n]
+	if !exists {
+		r = make([]int, m.maxDepth)
+		m.m[n] = r
+	}
+	// fmt.Println(r, depth)
+	r[depth-1] = result
+}
+
+func (m memory) get(n int, depth int) (int, bool) {
+	if r, exists := m.m[n]; exists {
+		result := r[depth-1]
+		return result, result > 0
 	}
 	return 0, false
 }
