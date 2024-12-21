@@ -2,4 +2,4 @@ package lin
 
 import "golang.org/x/exp/constraints"
 
-type Vec[N constraints.Integer] struct{ x, y N }
+type Vec[N constraints.Integer] struct{ X, Y N }
