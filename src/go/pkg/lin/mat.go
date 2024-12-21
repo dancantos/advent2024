@@ -2,23 +2,19 @@ package lin
 
 import "golang.org/x/exp/constraints"
 
-type Mat[N constraints.Integer] struct {
-	grid [][]N
-}
+type Mat[N constraints.Float] [][]N
 
-func NewMat[N constraints.Integer](r, c int) Mat[N] {
+func NewMat[N constraints.Float](r, c int) Mat[N] {
 	m := Mat[N]{}
-	m.grid = make([][]N, r)
+	m = make([][]N, r)
 	for i := 0; i < r; i++ {
-		m.grid[i] = make([]N, c)
+		m[i] = make([]N, c)
 	}
 	return m
 }
 
-type IMat = Mat[int]
-
 func (m Mat[N]) LUSolve(vec []N) []N {
-	n := len(m.grid)
+	n := len(m)
 	lu := NewMat[N](n, n)
 	sum := N(0)
 
@@ -27,16 +23,16 @@ func (m Mat[N]) LUSolve(vec []N) []N {
 		for j := i; j < n; j++ {
 			sum = 0
 			for k := 0; k < i; k++ {
-				sum += lu.grid[i][k] * lu.grid[k][j]
+				sum += lu[i][k] * lu[k][j]
 			}
-			lu.grid[i][j] = m.grid[i][j] - sum
+			lu[i][j] = m[i][j] - sum
 		}
 		for j := i + 1; j < n; j++ {
 			sum = 0
 			for k := 0; k < i; k++ {
-				sum += lu.grid[j][k] * lu.grid[k][i]
+				sum += lu[j][k] * lu[k][i]
 			}
-			lu.grid[j][i] = (m.grid[j][i] - sum) / lu.grid[i][i]
+			lu[j][i] = (m[j][i] - sum) / lu[i][i]
 		}
 	}
 
@@ -46,16 +42,16 @@ func (m Mat[N]) LUSolve(vec []N) []N {
 	for i := 0; i < n; i++ {
 		sum := N(0)
 		for k := 0; k < i; k++ {
-			sum += lu.grid[i][k] * inter[k]
+			sum += lu[i][k] * inter[k]
 		}
 		inter[i] = vec[i] - sum
 	}
 	for i := n - 1; i >= 0; i-- {
 		sum := N(0)
 		for k := i + 1; k < n; k++ {
-			sum += lu.grid[i][k] * solution[k]
+			sum += lu[i][k] * solution[k]
 		}
-		solution[i] = (inter[i] - sum) / lu.grid[i][i]
+		solution[i] = (inter[i] - sum) / lu[i][i]
 	}
 	return solution
 }

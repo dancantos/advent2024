@@ -37,29 +37,39 @@ func main() {
 
 func fullCount(arr []int, iterations int) int {
 	count := 0
+	var iterCounter, cacheCounter int
 	m := newMemory(iterations)
 	for _, n := range arr {
-		count += countStones(n, iterations, m)
+		count += countStones(n, iterations, m, func(cacheHit bool) {
+			iterCounter++
+			if cacheHit {
+				cacheCounter++
+			}
+		})
 	}
+	fmt.Println("ITERATIONS", iterCounter)
+	fmt.Println("CACHE HITS", cacheCounter)
 	return count
 }
 
-func countStones(n int, depth int, m memory) int {
+func countStones(n int, depth int, m memory, callback func(bool)) int {
 	if depth == 0 {
 		return 1
 	}
 	if result, exists := m.get(n, depth); exists {
+		callback(true)
 		return result
 	}
+	callback(false)
 	result := 0
 	switch {
 	case n == 0:
-		result = countStones(1, depth-1, m)
+		result = countStones(1, depth-1, m, callback)
 	case evenDigits(n):
 		l, r := splitIntByMath(n)
-		result = countStones(l, depth-1, m) + countStones(r, depth-1, m)
+		result = countStones(l, depth-1, m, callback) + countStones(r, depth-1, m, callback)
 	default:
-		result = countStones(n*2024, depth-1, m)
+		result = countStones(n*2024, depth-1, m, callback)
 	}
 	m.record(n, depth, result)
 	return result
