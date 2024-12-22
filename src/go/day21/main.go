@@ -10,7 +10,7 @@ func main() {
 }
 
 func sumComplexities(codes []string, nums []int, robots int) int {
-	m := newMemory(robots + 1)
+	m := newMemory(robots)
 	sum := 0
 	for i, code := range codes {
 		sum += countCommands(code, robots, m) * nums[i]
@@ -42,9 +42,9 @@ func _countCommands(commands []int, depth int, m memory) int {
 	commands = append([]int{PRESS}, commands...)
 	for i := 0; i < len(commands)-1; i++ {
 		current, next := commands[i], commands[i+1]
-		if pairSum, exists = m.get(vec{current, next}, depth); !exists {
+		if pairSum, exists = m.get(current, next, depth); !exists {
 			pairSum = _countCommands(moveToAndPressPad(keypad[current], keypad[next]), depth-1, m)
-			m.put(vec{current, next}, depth, pairSum)
+			m.put(current, next, depth, pairSum)
 		}
 		sum += pairSum
 	}
@@ -104,7 +104,8 @@ func moveToAndPressTerminal(start, destination vec) []int {
 }
 
 func moveToAndPressPad(start, destination vec) []int {
-	result := make([]int, 0, 5)
+	// move commands can take at most 4 commands, max occuring when moving between A and < (v<<A or >>^A)
+	result := make([]int, 0, 4)
 
 	if destination.x == 0 && start.y == 1 {
 		// if start -> end could contain top-left forbidden spot, prefer DOWN over LEFT
@@ -190,26 +191,19 @@ var terminal = map[rune]vec{
 	'9': {2, 3},
 }
 
-type memory [][][]int
+// memory is a 3d array of cmd1 -> cmd2 -> depth
+type memory [][5][5]int
 
 // fully pre-allocation the memory construct based on depth required
 func newMemory(depth int) memory {
-	m := make(memory, 5)
-	for i := 0; i < 5; i++ {
-		mid := make([][]int, 5)
-		for j := 0; j < 5; j++ {
-			mid[j] = make([]int, depth)
-		}
-		m[i] = mid
-	}
-	return m
+	return make(memory, depth)
 }
 
-func (m memory) put(pair vec, depth, count int) {
-	m[pair.x][pair.y][depth] = count
+func (m memory) put(from, to, depth, count int) {
+	m[depth-1][from][to] = count
 }
 
-func (m memory) get(pair vec, depth int) (int, bool) {
-	count := m[pair.x][pair.y][depth]
+func (m memory) get(from, to, depth int) (int, bool) {
+	count := m[depth-1][from][to]
 	return count, count > 0
 }
