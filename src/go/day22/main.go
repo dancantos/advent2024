@@ -6,7 +6,6 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
-	"maps"
 	"strconv"
 
 	"github.com/dancantos/advent2024/src/go/pkg/must"
@@ -18,7 +17,7 @@ const (
 )
 
 func main() {
-	fmt.Println("Puzzle 1 (count 2000th prices): ", count2000Prices(nums))
+	fmt.Println("Puzzle 1 (count 2000th prices):", count2000Prices(nums))
 	fmt.Println("Puzzle 2 (maximize bananas):", findMaxBananas(nums))
 }
 
@@ -27,12 +26,15 @@ func price(n int) int {
 }
 
 func findMaxBananas(nums []int) int {
-	m := make(memory)
+	m := memory{}
+	// local := memory{}
 	for _, n := range nums {
+		// zero out local memory
+		// local = memory{}
 		memoizeDiffs(n, m)
 	}
 	var maxBananas int
-	for bananaCount := range maps.Values(m) {
+	for _, bananaCount := range m {
 		if bananaCount > maxBananas {
 			maxBananas = bananaCount
 		}
@@ -49,40 +51,40 @@ func count2000Prices(nums []int) int {
 }
 
 func memoizeDiffs(n int, m memory) {
-	localBests := make(memory)
-	diffs := [4]int{}
+	// zero out local memory
+	local := make(memory)
+	var da, db, dc, dd int
+	// diffs := [4]int{}
 
 	next := process(n)
 	currentPrice, nextPrice := price(n), price(next)
-	diffs[0] = nextPrice - currentPrice
+	da = nextPrice - currentPrice
 
 	n, next = next, process(next)
 	currentPrice, nextPrice = nextPrice, price(next)
-	diffs[1] = nextPrice - currentPrice
+	db = nextPrice - currentPrice
 
 	n, next = next, process(next)
 	currentPrice, nextPrice = nextPrice, price(next)
-	diffs[2] = nextPrice - currentPrice
+	dc = nextPrice - currentPrice
 
 	n, next = next, process(next)
 	currentPrice, nextPrice = nextPrice, price(next)
-	diffs[3] = nextPrice - currentPrice
+	dd = nextPrice - currentPrice
 
-	cp := [4]int{}
-	copy(cp[:], diffs[:])
-	localBests[diffs] = nextPrice
+	local[[4]int{da, db, dc, dd}] = nextPrice
 
 	for i := 5; i < NUM_PRICES; i++ {
-		copy(diffs[:3], diffs[1:])
+		da, db, dc = db, dc, dd
 		n, next = next, process(next)
 		currentPrice, nextPrice = nextPrice, price(next)
-		diffs[3] = nextPrice - currentPrice
-		if _, exists := localBests[diffs]; !exists {
-			localBests[diffs] = nextPrice
+		dd = nextPrice - currentPrice
+		if _, exists := local[[4]int{da, db, dc, dd}]; !exists {
+			local[[4]int{da, db, dc, dd}] = nextPrice
 		}
 	}
 
-	for k, v := range localBests {
+	for k, v := range local {
 		m[k] += v
 	}
 }
@@ -97,7 +99,7 @@ func produceNumbers(seed int, nth int) int {
 func process(num int) int {
 	// mul 64, mix, prune
 	num = mixAndPrune(num, num*64)
-	num = mixAndPrune(num, num/32)
+	num = num/32 ^ num // this number can only shrink, no need to modulo
 	num = mixAndPrune(num, num*2048)
 	return num
 }
