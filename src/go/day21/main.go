@@ -10,7 +10,7 @@ func main() {
 }
 
 func sumComplexities(codes []string, nums []int, robots int) int {
-	m := make(memory)
+	m := newMemory(robots + 1)
 	sum := 0
 	for i, code := range codes {
 		sum += countCommands(code, robots, m) * nums[i]
@@ -190,22 +190,26 @@ var terminal = map[rune]vec{
 	'9': {2, 3},
 }
 
-type memory map[vec][]int
+type memory [][][]int
+
+// fully pre-allocation the memory construct based on depth required
+func newMemory(depth int) memory {
+	m := make(memory, 5)
+	for i := 0; i < 5; i++ {
+		mid := make([][]int, 5)
+		for j := 0; j < 5; j++ {
+			mid[j] = make([]int, depth)
+		}
+		m[i] = mid
+	}
+	return m
+}
 
 func (m memory) put(pair vec, depth, count int) {
-	depths, exists := m[pair]
-	if !exists {
-		depths = make([]int, 26) // 25 is max
-		m[pair] = depths
-	}
-	depths[depth] = count
+	m[pair.x][pair.y][depth] = count
 }
 
 func (m memory) get(pair vec, depth int) (int, bool) {
-	depths, exists := m[pair]
-	if !exists {
-		return 0, false
-	}
-	count := depths[depth]
+	count := m[pair.x][pair.y][depth]
 	return count, count > 0
 }
