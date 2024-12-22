@@ -8,7 +8,7 @@ var anchor int
 // goarch: arm64
 // pkg: github.com/dancantos/advent2024/src/go/day13
 // cpu: Apple M1 Pro
-// BenchmarkPuzzle1-10    	   30721	     39461 ns/op	   40960 B/op	    1920 allocs/op
+// BenchmarkPuzzle1-10    	   25304	     41422 ns/op	   40960 B/op	    1920 allocs/op
 func BenchmarkPuzzle1(b *testing.B) {
 	var result int
 	for n := 0; n < b.N; n++ {
@@ -19,9 +19,9 @@ func BenchmarkPuzzle1(b *testing.B) {
 
 // goos: darwin
 // goarch: arm64
-// pkg: github.com/dancantos/advent2024/src/go/day13
+// pkg: github.com/dancantos/advent2024/src/go/day21
 // cpu: Apple M1 Pro
-// BenchmarkPuzzle2-10    	   29456	     39696 ns/op	   40960 B/op	    1920 allocs/op
+// BenchmarkPuzzle2-10    	    5434	    217652 ns/op	  189358 B/op	    4221 allocs/op
 func BenchmarkPuzzle2(b *testing.B) {
 	var result int
 	for n := 0; n < b.N; n++ {

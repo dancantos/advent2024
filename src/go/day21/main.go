@@ -144,40 +144,10 @@ func readInput(r io.Reader) ([]string, []int) {
 
 type vec struct{ x, y int }
 
-func moveTo(start, destination vec) []int {
-	result := make([]int, 0, 4)
-	if destination.y < start.y {
-		for i := 0; i < start.y-destination.y; i++ {
-			result = append(result, DOWN)
-		}
-	}
-	if destination.x < start.x {
-		for i := 0; i < start.x-destination.x; i++ {
-			result = append(result, LEFT)
-		}
-	}
-	if destination.x > start.x {
-		for i := 0; i < destination.x-start.x; i++ {
-			result = append(result, RIGHT)
-		}
-	}
-	if destination.y > start.y {
-		for i := 0; i < destination.y-start.y; i++ {
-			result = append(result, UP)
-		}
-	}
-	return result
-}
-
 func moveToAndPressTerminal(start, destination vec) []int {
 	result := make([]int, 0, 5)
 	if start.y == 0 && destination.x == 0 {
 		// here we need to prefer up over left
-		if destination.y < start.y {
-			for i := 0; i < start.y-destination.y; i++ {
-				result = append(result, DOWN)
-			}
-		}
 		if destination.y > start.y {
 			for i := 0; i < destination.y-start.y; i++ {
 				result = append(result, UP)
@@ -186,19 +156,9 @@ func moveToAndPressTerminal(start, destination vec) []int {
 		if destination.x < start.x {
 			for i := 0; i < start.x-destination.x; i++ {
 				result = append(result, LEFT)
-			}
-		}
-		if destination.x > start.x {
-			for i := 0; i < destination.x-start.x; i++ {
-				result = append(result, RIGHT)
 			}
 		}
 	} else if start.x == 0 && destination.y == 0 {
-		if destination.x < start.x {
-			for i := 0; i < start.x-destination.x; i++ {
-				result = append(result, LEFT)
-			}
-		}
 		if destination.x > start.x {
 			for i := 0; i < destination.x-start.x; i++ {
 				result = append(result, RIGHT)
@@ -207,32 +167,27 @@ func moveToAndPressTerminal(start, destination vec) []int {
 		if destination.y < start.y {
 			for i := 0; i < start.y-destination.y; i++ {
 				result = append(result, DOWN)
-			}
-		}
-		if destination.y > start.y {
-			for i := 0; i < destination.y-start.y; i++ {
-				result = append(result, UP)
 			}
 		}
 	} else {
-		if destination.y < start.y {
-			for i := 0; i < start.y-destination.y; i++ {
-				result = append(result, DOWN)
-			}
-		}
 		if destination.x < start.x {
 			for i := 0; i < start.x-destination.x; i++ {
 				result = append(result, LEFT)
 			}
 		}
-		if destination.x > start.x {
-			for i := 0; i < destination.x-start.x; i++ {
-				result = append(result, RIGHT)
+		if destination.y < start.y {
+			for i := 0; i < start.y-destination.y; i++ {
+				result = append(result, DOWN)
 			}
 		}
 		if destination.y > start.y {
 			for i := 0; i < destination.y-start.y; i++ {
 				result = append(result, UP)
+			}
+		}
+		if destination.x > start.x {
+			for i := 0; i < destination.x-start.x; i++ {
+				result = append(result, RIGHT)
 			}
 		}
 	}
@@ -241,24 +196,49 @@ func moveToAndPressTerminal(start, destination vec) []int {
 
 func moveToAndPress(start, destination vec) []int {
 	result := make([]int, 0, 5)
-	if destination.y < start.y {
-		for i := 0; i < start.y-destination.y; i++ {
-			result = append(result, DOWN)
+	if destination.x == 0 && start.y == 1 {
+		// here we need to prefer up over left
+		if destination.y < start.y {
+			for i := 0; i < start.y-destination.y; i++ {
+				result = append(result, DOWN)
+			}
 		}
-	}
-	if destination.x < start.x {
-		for i := 0; i < start.x-destination.x; i++ {
-			result = append(result, LEFT)
+		if destination.x < start.x {
+			for i := 0; i < start.x-destination.x; i++ {
+				result = append(result, LEFT)
+			}
 		}
-	}
-	if destination.x > start.x {
-		for i := 0; i < destination.x-start.x; i++ {
-			result = append(result, RIGHT)
+	} else if start.x == 0 && destination.y == 1 {
+		if destination.x > start.x {
+			for i := 0; i < destination.x-start.x; i++ {
+				result = append(result, RIGHT)
+			}
 		}
-	}
-	if destination.y > start.y {
-		for i := 0; i < destination.y-start.y; i++ {
-			result = append(result, UP)
+		if destination.y > start.y {
+			for i := 0; i < destination.y-start.y; i++ {
+				result = append(result, UP)
+			}
+		}
+	} else {
+		if destination.x < start.x {
+			for i := 0; i < start.x-destination.x; i++ {
+				result = append(result, LEFT)
+			}
+		}
+		if destination.y < start.y {
+			for i := 0; i < start.y-destination.y; i++ {
+				result = append(result, DOWN)
+			}
+		}
+		if destination.y > start.y {
+			for i := 0; i < destination.y-start.y; i++ {
+				result = append(result, UP)
+			}
+		}
+		if destination.x > start.x {
+			for i := 0; i < destination.x-start.x; i++ {
+				result = append(result, RIGHT)
+			}
 		}
 	}
 	return append(result, PRESS)
