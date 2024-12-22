@@ -25,7 +25,7 @@ func computeCommands(code string, indirections int) []int {
 	commands := moveToAndPressTerminal(start, terminal[rune(code[0])])
 	for i := 0; i < len(code)-1; i++ {
 		from, to := terminal[rune(code[i])], terminal[rune(code[i+1])]
-		commands = append(commands, moveToAndPressTerminal(from, to)...)
+		commands = moveToAndPressTerminal(from, to)
 	}
 
 	// 2 robots controlling each other

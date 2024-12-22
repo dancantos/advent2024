@@ -8,7 +8,7 @@ var anchor int
 // goarch: arm64
 // pkg: github.com/dancantos/advent2024/src/go/day21
 // cpu: Apple M1 Pro
-// BenchmarkPuzzle1-10    	  480264	      2533 ns/op	    4704 B/op	      86 allocs/op
+// BenchmarkPuzzle1-10    	  500146	      2458 ns/op	    4560 B/op	      84 allocs/op
 func BenchmarkPuzzle1(b *testing.B) {
 	var result int
 	for n := 0; n < b.N; n++ {

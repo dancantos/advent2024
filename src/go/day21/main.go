@@ -54,7 +54,8 @@ func _countCommands(commands []int, depth int, m memory) int {
 type vec struct{ x, y int }
 
 func moveToAndPressTerminal(start, destination vec) []int {
-	result := make([]int, 0, 5)
+	// max command count occurs when moving between 7 and A (>>vvvA or ^^^<<A)
+	result := make([]int, 0, 6)
 	if start.y == 0 && destination.x == 0 {
 		// here we need to prefer up over left
 		if destination.y > start.y {
