@@ -167,7 +167,7 @@ const (
 )
 
 // keypad command locations
-var keypad = map[int]vec{
+var keypad = []vec{
 	PRESS: {2, 1},
 	UP:    {1, 1},
 	DOWN:  {1, 0},
