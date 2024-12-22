@@ -19,15 +19,8 @@ var input []byte
 var codes, nums = readInput(bytes.NewReader(input))
 
 func main() {
-	// 	const test = `029A
-	// 980A
-	// 179A
-	// 456A
-	// 379A`
-	// 	codes, nums := readInput(strings.NewReader(test))
-	// fmt.Println(countComplexities(codes, 2))
-	fmt.Println(countComplexities2(codes, 2))
-	fmt.Println(countComplexities2(codes, 25))
+	fmt.Println("Puzzle1 (2 mid-robots):", countComplexities2(codes, 2))
+	fmt.Println("Puzzle2 (25 mid-robots):", countComplexities2(codes, 25))
 }
 
 func countComplexities(codes []string, indirection int) int {
